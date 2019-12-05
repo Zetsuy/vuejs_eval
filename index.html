@@ -5,17 +5,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>test vue JS</title>
+    <title>test vue JS - Jérémy Garcia</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        tr:nth-child(2n+2) {
+            background: #CCC
+        }
+
+        caption {
+            text-align: right;
+        }
+
+        th,
+        td {
+            border-top: 1px solid #CCC;
+            border-spacing: 5px
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Evaluation Vuejs</h1>
+    
     <div id="app">
+        <p v-html="titre"></p>
         <div id="tableau">
-            <table>
-                <caption>
-                    Facture du 1 Decembre 2019
+            <table align="center">
+                <caption v-html="caption">
+                    
                 </caption>
                 <thead>
                     <tr>
@@ -46,20 +66,21 @@
                     <tr v-for="(element,i) in factures" :key="i">
                         <th>{{element.id}}</th>
                         <th><input type="text" v-model="element.designation"></th>
-                        <th><input type="text" v-model="element.qte"></th>
+                        <th><input type="number" v-model="element.qte"></th>
                         <th><input type="text" v-model="element.pu_ht"></th>
-                        <th><input type="text" v-model="element.tva"></th>
-                        <th>{{calcul_ht(i)}}</th>
-                        <th>{{element.p_ttc}}</th>
+                        <th><input type="number" v-model="element.tva"></th>
+                        <th>{{calcul_ht(i)}} €</th>
+                        <th>{{calcul_ttc(i)}} €</th>
                         <th><button type="button" v-on:click="remove(i)">X</button></th>
                 </thead>
 
             </table>
         </div>
         <div id="bottom">
-            <input type="button" value="+ Ajouter une ligne" v-on:click="addliste">
+            <input id="button_ajout" type="button" value="+ Ajouter une ligne" v-on:click="addliste"><br>
+            Total HT : {{calcul_totalHT()}} €
             <br>
-            Debug : {{factures}}
+            Total TTC : {{calcul_totalTTC()}} €
         </div>
 
     </div>
@@ -70,29 +91,43 @@
         var app = new Vue({
             el: '#app',
             data: {
-                factures: [{ "id": 1, "designation": "avion", "qte": 3, "pu_ht": 210, "tva": 20, "p_ht": 756, "p_ttc": 907.2 }, { "id": 2, "designation": "bateau", "qte": 4, "pu_ht": 20, "tva": 0, "p_ht": 80, "p_ttc": 80 }]
+                titre : '<h1>Evaluation Vuejs - Jeremy Garcia</h1>',
+                caption : 'Facture du 1 Decembre 2019',
+                factures: [{ "id": 1, "designation": "avion", "qte": 3, "pu_ht": 210, "tva": 20, "p_ht": 0, "p_ttc": 0 }, { "id": 2, "designation": "bateau", "qte": 4, "pu_ht": 20, "tva": 0, "p_ht": 0, "p_ttc": 0 }]
             },
             methods: {
                 addliste() {
                     let id = this.factures[this.factures.length - 1].id + 1
-                    this.factures.push({ id: id });
+                    this.factures.push({ id: id, "qte": 0, "pu_ht": 0, "tva": 0 });
                 },
                 remove(index) {
-                    this.factures.splice(index, 1)
+                    this.factures.splice(index, 1);
                 },
-                calcul_ht(i){
-                    return (this.factures[i].qte * this.factures[i].pu_ht)
-                },
-                calcul_ttc(){
+                calcul_ht(i) {
+                    resultat = this.factures[i].qte * this.factures[i].pu_ht;
+                    this.factures[i].p_ht = resultat;
+                    return this.factures[i].p_ht;
 
                 },
-                calcul_totalHT(){
-
+                calcul_ttc(i) {
+                    resultat = this.factures[i].p_ht + (this.factures[i].p_ht * (this.factures[i].tva / 100));
+                    this.factures[i].p_ttc = resultat;
+                    return this.factures[i].p_ttc;
                 },
-                calcul_totalTTC(){
-
-                }
-                
+                calcul_totalHT() {
+                    somme = 0;
+                    for (var i = 0; i < this.factures.length; i++) {
+                        somme = somme + this.factures[i].p_ht
+                    }
+                    return somme;
+                },
+                calcul_totalTTC() {
+                    somme = 0;
+                    for (var i = 0; i < this.factures.length; i++) {
+                        somme = somme + this.factures[i].p_ttc
+                    }
+                    return somme;
+                },
             },
             mounted() {
                 if (localStorage.getItem('factures')) this.todos = JSON.parse(localStorage.getItem('factures'));
