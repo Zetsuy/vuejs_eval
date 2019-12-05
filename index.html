@@ -24,18 +24,35 @@
             border-top: 1px solid #CCC;
             border-spacing: 5px
         }
+
+        #button_ajout {
+            background-color: #fff;
+            color: green;
+            border-radius: 5px;
+            padding: 10px;
+            border: green 1;
+        }
+
+        #bottom {
+            text-align: center;
+        }
+
+        #resultat {
+            text-align: right;
+            width: 75%;
+        }
     </style>
 </head>
 
 <body>
 
-    
+
     <div id="app">
         <p v-html="titre"></p>
         <div id="tableau">
             <table align="center">
                 <caption v-html="caption">
-                    
+
                 </caption>
                 <thead>
                     <tr>
@@ -78,9 +95,18 @@
         </div>
         <div id="bottom">
             <input id="button_ajout" type="button" value="+ Ajouter une ligne" v-on:click="addliste"><br>
-            Total HT : {{calcul_totalHT()}} €
-            <br>
-            Total TTC : {{calcul_totalTTC()}} €
+            <div id="resultat">
+                <div id="ht">
+                    Total HT : {{calcul_totalHT()}} €
+                </div>
+
+                <br>
+                <div id="ttc">
+                    Total TTC : {{calcul_totalTTC()}} €
+                </div>
+            </div>
+
+
         </div>
 
     </div>
@@ -91,8 +117,8 @@
         var app = new Vue({
             el: '#app',
             data: {
-                titre : '<h1>Evaluation Vuejs - Jeremy Garcia</h1>',
-                caption : 'Facture du 1 Decembre 2019',
+                titre: '<h1>Evaluation Vuejs - Jeremy Garcia</h1>',
+                caption: 'Facture du 1 Decembre 2019',
                 factures: [{ "id": 1, "designation": "avion", "qte": 3, "pu_ht": 210, "tva": 20, "p_ht": 0, "p_ttc": 0 }, { "id": 2, "designation": "bateau", "qte": 4, "pu_ht": 20, "tva": 0, "p_ht": 0, "p_ttc": 0 }]
             },
             methods: {
