@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test vue JS</title>
+</head>
+
+<body>
+
+    <h1>Evaluation Vuejs</h1>
+    <div id="app">
+        <div id="tableau">
+            <table>
+                <caption>
+                    Facture du 1 Decembre 2019
+                </caption>
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                        </th>
+                        <th>
+                            Designation
+                        </th>
+                        <th>
+                            Qte
+                        </th>
+                        <th>
+                            Pu Ht
+                        </th>
+                        <th>
+                            Tva
+                        </th>
+                        <th>
+                            P Ht
+                        </th>
+                        <th>
+                            P Ttc
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    <tr v-for="(element,i) in factures" :key="i">
+                        <th>{{element.id}}</th>
+                        <th><input type="text" v-model="element.designation"></th>
+                        <th><input type="text" v-model="element.qte"></th>
+                        <th><input type="text" v-model="element.pu_ht"></th>
+                        <th><input type="text" v-model="element.tva"></th>
+                        <th>{{calcul_ht(i)}}</th>
+                        <th>{{element.p_ttc}}</th>
+                        <th><button type="button" v-on:click="remove(i)">X</button></th>
+                </thead>
+
+            </table>
+        </div>
+        <div id="bottom">
+            <input type="button" value="+ Ajouter une ligne" v-on:click="addliste">
+            <br>
+            Debug : {{factures}}
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript">
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                factures: [{ "id": 1, "designation": "avion", "qte": 3, "pu_ht": 210, "tva": 20, "p_ht": 756, "p_ttc": 907.2 }, { "id": 2, "designation": "bateau", "qte": 4, "pu_ht": 20, "tva": 0, "p_ht": 80, "p_ttc": 80 }]
+            },
+            methods: {
+                addliste() {
+                    let id = this.factures[this.factures.length - 1].id + 1
+                    this.factures.push({ id: id });
+                },
+                remove(index) {
+                    this.factures.splice(index, 1)
+                },
+                calcul_ht(i){
+                    return (this.factures[i].qte * this.factures[i].pu_ht)
+                },
+                calcul_ttc(){
+
+                },
+                calcul_totalHT(){
+
+                },
+                calcul_totalTTC(){
+
+                }
+                
+            },
+            mounted() {
+                if (localStorage.getItem('factures')) this.todos = JSON.parse(localStorage.getItem('factures'));
+            },
+            watch: {
+                factures: {
+                    handler() {
+                        localStorage.setItem('factures', JSON.stringify(this.factures));
+                    },
+                    deep: true,
+                },
+            }
+
+        });
+    </script>
+</body>
+
+</html>
