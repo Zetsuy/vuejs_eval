@@ -130,7 +130,7 @@
                 },
             },
             mounted() {
-                if (localStorage.getItem('factures')) this.todos = JSON.parse(localStorage.getItem('factures'));
+                if (localStorage.getItem('factures')) this.factures = JSON.parse(localStorage.getItem('factures'));
             },
             watch: {
                 factures: {
